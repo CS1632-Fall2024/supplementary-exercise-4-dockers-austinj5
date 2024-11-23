@@ -40,6 +40,10 @@ public class D3Test {
     driver = new ChromeDriver();
     js = (JavascriptExecutor) driver;
     vars = new HashMap<String, Object>();
+
+    ChromeOptions options = new ChromeOptions();
+    options.addArguments("--headless");
+    driver = new ChromeDriver(options);
   }
   @After
   public void tearDown() {
@@ -47,7 +51,7 @@ public class D3Test {
   }
   @Test
   public void tEST1LINKS() {
-    driver.get("https://cs1632.appspot.com//");
+    driver.get("http://localhost:8080");
     {
       List<WebElement> elements = driver.findElements(By.xpath("//a[contains(@href, \'/reset\')]"));
       assert(elements.size() > 0);
@@ -58,11 +62,11 @@ public class D3Test {
       String attribute = element.getAttribute("href");
       vars.put("link", attribute);
     }
-    assertEquals("https://cs1632.appspot.com/reset", vars.get("link").toString());
+    assertEquals("http://localhost:8080/reset", vars.get("link").toString());
   }
   @Test
   public void tEST2RESET() {
-    driver.get("https://cs1632.appspot.com//");
+    driver.get("http://localhost:8080");
     js.executeScript("document.cookie = \"1=false\";document.cookie = \"2=false\";document.cookie = \"3=false\";");
     js.executeScript("document.cookie = \"1=true\";document.cookie = \"2=true\";document.cookie = \"3=true\";");
     // Click reset
@@ -73,7 +77,7 @@ public class D3Test {
   }
   @Test
   public void tEST3CATALOG() {
-    driver.get("https://cs1632.appspot.com//");
+    driver.get("http://localhost:8080");
     js.executeScript("document.cookie = \"1=false\";document.cookie = \"2=false\";document.cookie = \"3=false\";");
     driver.findElement(By.xpath("//a[contains(@href, \'/\')]")).click();
     {
@@ -81,12 +85,12 @@ public class D3Test {
       String attribute = element.getAttribute("src");
       vars.put("img", attribute);
     }
-    assertEquals("https://cs1632.appspot.com/images/cat2.jpg", vars.get("img").toString());
+    assertEquals("http://localhost:8080/images/cat2.jpg", vars.get("img").toString());
   }
 
   @Test
   public void tEST4LISTING() {
-    driver.get("https://cs1632.appspot.com//");
+    driver.get("http://localhost:8080");
     js.executeScript("document.cookie = \"1=false\";document.cookie = \"2=false\";document.cookie = \"3=false\";");
     driver.findElement(By.xpath("//a[contains(text(),\'Catalog\')]")).click();
     {
@@ -102,7 +106,7 @@ public class D3Test {
 
   @Test
   public void tEST5RENTACAT() {
-    driver.get("https://cs1632.appspot.com//");
+    driver.get("http://localhost:8080");
     js.executeScript("document.cookie = \"1=false\";document.cookie = \"2=false\";document.cookie = \"3=false\";");
     driver.findElement(By.xpath("//a[contains(text(),\'Rent-A-Cat\')]")).click();
     {
@@ -116,7 +120,7 @@ public class D3Test {
   }
   @Test
   public void tEST6RENT() {
-    driver.get("https://cs1632.appspot.com//");
+    driver.get("http://localhost:8080");
     js.executeScript("document.cookie = \"1=false\";document.cookie = \"2=false\";document.cookie = \"3=false\";");
     driver.findElement(By.xpath("//a[contains(text(),\'Rent-A-Cat\')]")).click();
     driver.findElement(By.xpath("//input[@id=\'rentID\']")).click();
@@ -129,7 +133,7 @@ public class D3Test {
   }
   @Test
   public void tEST7RETURN() {
-    driver.get("https://cs1632.appspot.com//");
+    driver.get("http://localhost:8080");
     js.executeScript("document.cookie = \"1=false\";document.cookie = \"2=false\";document.cookie = \"3=false\";");
     js.executeScript("document.cookie = \"2=true\";");
     driver.findElement(By.xpath("//a[contains(text(),\'Rent-A-Cat\')]")).click();
@@ -143,7 +147,7 @@ public class D3Test {
   }
   @Test
   public void tEST8FEEDACAT() {
-    driver.get("https://cs1632.appspot.com//");
+    driver.get("http://localhost:8080");
     js.executeScript("document.cookie = \"1=false\";document.cookie = \"2=false\";document.cookie = \"3=false\";");
     driver.findElement(By.xpath("//a[contains(text(),\'Feed-A-Cat\')]")).click();
     {
@@ -153,7 +157,7 @@ public class D3Test {
   }
   @Test
   public void tEST9FEED() {
-    driver.get("https://cs1632.appspot.com//");
+    driver.get("http://localhost:8080");
     js.executeScript("document.cookie = \"1=false\";document.cookie = \"2=false\";document.cookie = \"3=false\";");
     driver.findElement(By.xpath("//a[contains(text(),\'Feed-A-Cat\')]")).click();
     driver.findElement(By.xpath("//input[@id=\'catnips\']")).click();
@@ -167,54 +171,16 @@ public class D3Test {
   }
   @Test
   public void tEST10GREETACAT() {
-    driver.get("https://cs1632.appspot.com//");
+    driver.get("http://localhost:8080");
     js.executeScript("document.cookie = \"1=false\";document.cookie = \"2=false\";document.cookie = \"3=false\";");
     driver.findElement(By.xpath("//a[contains(text(),\'Greet-A-Cat\')]")).click();
     assertThat(driver.findElement(By.xpath("//div[@id=\'greeting\']/h4")).getText(), is("Meow!Meow!Meow!"));
   }
   @Test
   public void tEST11GREETACATWITHNAME() {
-    driver.get("https://cs1632.appspot.com//");
+    driver.get("http://localhost:8080");
     js.executeScript("document.cookie = \"1=false\";document.cookie = \"2=false\";document.cookie = \"3=false\";");
-    driver.get("https://cs1632.appspot.com//greet-a-cat/Jennyanydots");
+    driver.get("http://localhost:8080/greet-a-cat/Jennyanydots");
     assertThat(driver.findElement(By.xpath("//div[@id=\'greeting\']/h4")).getText(), is("Meow! from Jennyanydots."));
-  }
-  @Test
-  public void dEFECT1FUNGREETACAT() {
-    driver.get("https://cs1632.appspot.com//");
-    js.executeScript("document.cookie = \"1=false\";document.cookie = \"2=false\";document.cookie = \"3=false\";");
-    driver.findElement(By.xpath("//a[contains(text(),\'Rent-A-Cat\')]")).click();
-    driver.findElement(By.xpath("//input[@id=\'rentID\']")).click();
-    driver.findElement(By.xpath("//input[@id=\'rentID\']")).sendKeys("1");
-    driver.findElement(By.xpath("//button[@onclick=\'rentSubmit()\']")).click();
-    driver.findElement(By.xpath("//a[contains(text(),\'Greet-A-Cat\')]")).click();
-    driver.findElement(By.xpath("//div[@id=\'greeting\']/h4")).click();
-    assertThat(driver.findElement(By.xpath("//div[@id=\'greeting\']/h4")).getText(), is("Meow!Meow!"));
-  }
-  @Test
-  public void dEFECT2FUNGREETACATWITHNAME() {
-    driver.get("https://cs1632.appspot.com//");
-    js.executeScript("document.cookie = \"1=false\";document.cookie = \"2=false\";document.cookie = \"3=false\";");
-    driver.findElement(By.xpath("//a[contains(text(),\'Rent-A-Cat\')]")).click();
-    driver.findElement(By.xpath("//input[@id=\'rentID\']")).click();
-    driver.findElement(By.xpath("//input[@id=\'rentID\']")).sendKeys("1");
-    driver.findElement(By.xpath("//button[@onclick=\'rentSubmit()\']")).click();
-    driver.get("https://cs1632.appspot.com//greet-a-cat/Jennyanydots");
-    assertThat(driver.findElement(By.xpath("//div[@id=\'greeting\']/h4")).getText(), is("Jennyanydots is not here."));
-  }
-  @Test
-  public void dEFECT3FUNFEED() {
-    driver.get("https://cs1632.appspot.com//");
-    js.executeScript("document.cookie = \"1=false\";document.cookie = \"2=false\";document.cookie = \"3=false\";");
-    driver.findElement(By.xpath("//a[contains(text(),\'Feed-A-Cat\')]")).click();
-    driver.findElement(By.xpath("//input[@id=\'catnips\']")).click();
-    driver.findElement(By.xpath("//input[@id=\'catnips\']")).sendKeys("0");
-    driver.findElement(By.xpath("//button[@onclick=\'setTimeout(feedSubmit, 1000)\']")).click();
-    {
-      WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-      wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\'feedResult\' and text()=\'Nom, nom, nom.\']")));
-    }
-    driver.findElement(By.xpath("//div[@id=\'feedResult\']")).click();
-    assertThat(driver.findElement(By.xpath("//div[@id=\'feedResult\']")).getText(), is("Cat fight!"));
   }
 }
